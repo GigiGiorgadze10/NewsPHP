@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+</head>
+<body>
+    <form id="loginForm"> 
+        <input type="email" name="email" placeholder="Email" required> 
+        <input type="password" name="password" placeholder="Password" required> 
+        <button type="submit">Sign In</button> 
+    </form>
+    <script>
+        $(document).ready(function() { // კოდის შესრულება, როდესაც დოკუმენტი ჩაიტვირთება
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault(); 
+
+                $.ajax({
+                    url: 'signin.php',
+                    type: 'POST',
+                    data: $(this).serialize(), 
+                    success: function(response) {
+                        const res = JSON.parse(response); // მიღებული JSON-ის გაშიფრვა
+                        if (res.status === 'success') { 
+                            if (res.role === 'admin') { // თუ მომხმარებელი ადმინია
+                                window.location.href = 'admin.php'; 
+                            } else { // თუ მომხმარებელი არაა ადმინი
+                                window.location.href = 'index.php';
+                            }
+                        } else {
+                            alert(res.message); 
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
